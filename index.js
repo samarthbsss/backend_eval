@@ -33,9 +33,9 @@ app.use('/employees', empPath);
 //     // }
 // });
 
-// app.get('/',(req, res)=>{
-//     res.send('This is the main page');
-// })
+app.get('/',(req, res)=>{
+    res.send('This is the main page for Evaluation');
+})
 
 
 app.listen(port, async ()=>{
