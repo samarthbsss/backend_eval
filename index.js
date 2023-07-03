@@ -10,8 +10,8 @@ const todoRoute= require('./routes/todos');
 app.use(cors());
 app.use(express.json());
 
-// app.use('/users', userRoute);
-// app.use('/todos', todoRoute);
+app.use('/users', userRoute);
+app.use('/todos', todoRoute);
 
 
 app.get('/',(req, res)=>{
