@@ -8,8 +8,6 @@ const userPath= require('./routes/users');
 const User= require('./model/user.model');
 const empPath =require('./routes/emp');
 
-
-
 app.use(cors());
 app.use(express.json());
 
