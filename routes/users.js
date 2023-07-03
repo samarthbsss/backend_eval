@@ -2,45 +2,45 @@ const express= require('express');
 const router = express.Router();
 const bcrypt =require('bcrypt');
 const jwt=require('jsonwebtoken');
-const User= require('../model/user.model');
-const verifyToken =require('../middleware/verifytoken');
-// const e = require('express');
+const User =require('../model/user.model');
+const auth =require('../middleware/auth');
 require('dotenv').config();
 
-
-router.get('/profile', async (req, res)=>{    
-    try {
-            const user = await User.find();
-            res.json(user);
-    } catch (error) {
-            res.status(500).send('Error getting users');
-    }
-    })
-
-// for regist
-router.post('/register',(req, res)=>{
-    const {email, password ,ipAddress}= req.body;
-
-    const newUser= new User({
-        email,
-        password:bcrypt.hashSync(password,8),
-        ipAddress,
-    });
-     newUser.save();
-     res.json({msg:'New User is Registered!'});
-
+router.get('/',(req, res)=>{
+    res.send('Hello!');
 })
 
-router.post('/login', async (req, res)=>{
-   const {email , password} = req.body;
-   const user = await User.findOne({email});
+// res.send('/login',(re))
+
+router.post('/signup', (req, res)=>{
+   try {
+    const{email, password}= req.body;
+
+    const user= new User({
+     email,
+     password:bcrypt.hashSync(password,8),
+    });
+   user.save();
+    res.status(200).json({message:'New User is Signup Success!'});
+    
+   } catch (error) {
+   res.send('Something is wrong', error);
+   }
+   
+})
+
+router.post('/login',async (req, res)=>{
+    const {email, password} =req.body;
+    const user= await User.findOne({email});
     if(!user){
-        res.send({msg:'User not Found please register'});
-    }else{
-        const hash= user.password;
-        console.log(hash);
-        const decyptedpass =bcrypt.compareSync(password, hash);
-        if(decyptedpass){
+        res.send({msg:"User not Found"});
+    }
+    else{
+        const hash=user.password;
+        console.log(hash, 'this is the password');
+        const pass =bcrypt.compareSync(password, hash);
+        // Image
+        if(pass){
             const token =jwt.sign({userId: user._id}, process.env.secretKey);
             res.send({
                 msg:'Login Successfull',
@@ -51,7 +51,6 @@ router.post('/login', async (req, res)=>{
             res.send({msg:'password did not match'});
         }
     }
-
 })
 
-module.exports = router
+module.exports =router;
